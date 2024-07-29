@@ -15,7 +15,7 @@
 
 **Notification:** Kafka
 
-**Additional Tools:** Debezium Connector, Kafdrop, Zookeeper
+**Additional Tools:** Debezium Connector, Kafdrop, Zookeeper,
 KConnect, Docker
 
 
