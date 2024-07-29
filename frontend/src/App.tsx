@@ -6,22 +6,27 @@ import "./App.css";
 import { Toaster } from "react-hot-toast";
 
 const App: React.FC = () => {
-  const [kafkaMessage, setKafkaMessage] = useState<string | null>(null);
+  const [kafkaMessage, setKafkaMessage] = useState<Record<
+    string,
+    string
+  > | null>(null);
   const dbData = useWebSocket("ws://localhost:8080/ws/db");
   const kafkaData = useWebSocket("ws://localhost:8080/ws/kafka");
 
   useEffect(() => {
     if (kafkaData) {
-      setKafkaMessage(`Kafka Update: ${JSON.stringify(kafkaData)}`);
+      setKafkaMessage(kafkaData["payload"]["after"]);
     }
   }, [kafkaData]);
 
   return (
     <div className="App">
-      <h1>Flight Status Updates</h1>
+      <h1 className="mt-2 text-5xl bg-blue-700 text-white py-4 mx-16 rounded-md">
+        Flight Status Updates
+      </h1>
       <FlightTable data={dbData} />
       <ToastNotification message={kafkaMessage} />
-      <Toaster />
+      <Toaster position="top-right" />
     </div>
   );
 };
