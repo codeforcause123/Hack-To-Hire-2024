@@ -7,7 +7,7 @@
 
 ## Tech Stack
 
-**Frontend:** React, TailwindCSS , Axios, Moment 
+**Frontend:** React, TailwindCSS , Websocket, Moment 
 
 **Backend:** Golang, Gin, Gorilla-Websocket, Kafka-Go , Golang-pq Postgres Driver
 
