@@ -12,7 +12,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (kafkaData) {
-      setKafkaMessage(`Kafka Update: ${kafkaData}`);
+      setKafkaMessage(`Kafka Update: ${JSON.stringify(kafkaData)}`);
     }
   }, [kafkaData]);
 

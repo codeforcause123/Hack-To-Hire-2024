@@ -13,7 +13,6 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-// FlightStatus represents the structure of flight status data
 type FlightStatus struct {
 	FlightNumber string `json:"flight_number"`
 	Status       string `json:"status"`
@@ -21,19 +20,17 @@ type FlightStatus struct {
 	Details      string `json:"details"`
 }
 
-// Upgrader configuration for websocket
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 	CheckOrigin: func(r *http.Request) bool {
-		return true // Allow connections from any origin
+		return true
 	},
 }
 
-// Kafka consumer function
 func kafkaConsumer(ctx context.Context, messages chan<- string) {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:   []string{"localhost:9092"}, // Adjust the broker address as needed
+		Brokers:   []string{"localhost:9092"},
 		GroupID:   "websocket-consumer-group",
 		Topic:     "dbserver1.inventory.flight_updates",
 		Partition: 0,
@@ -53,7 +50,6 @@ func kafkaConsumer(ctx context.Context, messages chan<- string) {
 	}
 }
 
-// WebSocket handler for Kafka consumer
 func wsKafkaHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -70,19 +66,17 @@ func wsKafkaHandler(w http.ResponseWriter, r *http.Request) {
 	for msg := range messages {
 		err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
 		if err != nil {
-			log.Println("Error writing to websocket:", err)
+			log.Println("Error writing to websocket-kafka:", err)
 			return
 		}
 	}
 }
 
-// Database connection function
 func connectDB() (*sql.DB, error) {
 	connStr := "user=postgres password=postgres dbname=postgres sslmode=disable host=localhost port=8001"
 	return sql.Open("postgres", connStr)
 }
 
-// Fetch flight statuses from database
 func fetchFlightStatuses(db *sql.DB) ([]FlightStatus, error) {
 	rows, err := db.Query("SELECT flight_number, status, update_time, details FROM inventory.flight_updates")
 	if err != nil {
@@ -104,7 +98,6 @@ func fetchFlightStatuses(db *sql.DB) ([]FlightStatus, error) {
 	return statuses, nil
 }
 
-// WebSocket handler for database queries
 func wsDBHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		conn, err := upgrader.Upgrade(w, r, nil)
@@ -134,7 +127,7 @@ func wsDBHandler(db *sql.DB) http.HandlerFunc {
 
 				err = conn.WriteMessage(websocket.TextMessage, msgJSON)
 				if err != nil {
-					log.Println("Error writing to websocket:", err)
+					log.Println("Error writing to websocket-db:", err)
 					return
 				}
 			}
@@ -143,14 +136,12 @@ func wsDBHandler(db *sql.DB) http.HandlerFunc {
 }
 
 func main() {
-	// Database connection
 	db, err := connectDB()
 	if err != nil {
 		log.Fatalf("Error connecting to database: %v", err)
 	}
 	defer db.Close()
 
-	// HTTP server with WebSocket handlers
 	http.HandleFunc("/ws/kafka", wsKafkaHandler)
 	http.HandleFunc("/ws/db", wsDBHandler(db))
 
