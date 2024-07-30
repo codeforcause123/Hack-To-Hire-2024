@@ -30,5 +30,5 @@ KConnect, Docker, PgAdmin, PostMan
 
 
 ## Screenshot
-![indigo2](https://github.com/user-attachments/assets/9e2e4ca6-442c-4329-ac91-48e390197f7b)
+![last](https://github.com/user-attachments/assets/0209e4e5-144f-4681-9e15-60f4f192ae6b)
 
