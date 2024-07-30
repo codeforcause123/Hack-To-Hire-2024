@@ -21,8 +21,9 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <h1 className="mt-2 text-5xl bg-blue-700 text-white py-4 mx-16 rounded-md">
-        Flight Status Updates
+      <h2 className="bg-blue-950 text-white text-center mb-4">⚔️⚔️ Indigo Hack-to-Hire 2024 ⚔️⚔️</h2>
+      <h1 className="text-5xl bg-blue-700 text-white py-4 mx-48 rounded-full text-center">
+        Indigo Flight Status Updates
       </h1>
       <FlightTable data={dbData} />
       <ToastNotification message={kafkaMessage} />
